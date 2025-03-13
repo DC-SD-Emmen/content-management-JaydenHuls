@@ -1,6 +1,7 @@
 <?php
-require_once "databaseConnection.php";
-require_once "UserManager.php";
+
+require_once "classes/databaseConnection.php";
+require_once "classes/UserManager.php";
 
 $database = new Database();
 $userManager = new UserManager($database);

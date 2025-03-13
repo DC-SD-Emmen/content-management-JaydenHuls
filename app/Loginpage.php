@@ -1,9 +1,18 @@
 <?php
-require_once "databaseConnection.php";
-require_once "UserManager.php";
 
+require_once "classes/databaseConnection.php";
+require_once "classes/UserManager.php";
 $database = new Database();
 $userManager = new UserManager($database);
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+    $username = htmlspecialchars($_POST["Username"]);
+    $password = $_POST["Password"]; // Geen `htmlspecialchars()` nodig voor wachtwoord
+
+    if (!empty($username) && !empty($password)) {
+        echo $userManager->login($username, $password);
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -21,14 +30,7 @@ $userManager = new UserManager($database);
     </form>
 
     <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
-        $username = htmlspecialchars($_POST["Username"]);
-        $password = $_POST["Password"]; // Geen `htmlspecialchars()` nodig voor wachtwoord
 
-        if (!empty($username) && !empty($password)) {
-            echo $userManager->login($username, $password);
-        }
-    }
     ?>
 </body>
 </html>

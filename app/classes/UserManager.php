@@ -31,7 +31,11 @@ class UserManager {
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user && password_verify($password, $user['Password'])) {
-                return "Succesvol ingelogd!";
+                session_start();
+                $_SESSION['Username'] = $user['Username'];
+                $_SESSION['user_id'] = $user['id'];
+                header("Location: http://localhost/index.php");
+                exit();
             } else {
                 return "Gebruikersnaam of wachtwoord is onjuist.";
             }
