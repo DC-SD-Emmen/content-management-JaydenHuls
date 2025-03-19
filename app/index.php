@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <?php
       
       spl_autoload_register(function ($className) {
-        require_once 'classes/' . $className . '.php';
+        include 'classes/' . $className . '.php';
       });
 
       $gameID = isset($_GET['game_id']) ? $_GET['game_id'] : '';
@@ -59,7 +59,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               echo "</a>";
             }
           echo "</div>";
-      ?>
-
+?>
  </body>
 </html>

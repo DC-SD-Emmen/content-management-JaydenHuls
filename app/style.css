@@ -6,3 +6,39 @@ body{
     border-style: 1px, red, solid ;
     background-color: black;
 }
+
+#message {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+a:link {
+    color: white;
+    background-color: transparent;
+    text-decoration: none;
+  }
+  
+  a:visited {
+    color: lightgrey;
+    background-color: transparent;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    color: red;
+    background-color: transparent;
+    text-decoration: underline;
+  }
+  
+  a:active {
+    color: darkred;
+    background-color: transparent;
+    text-decoration: underline;
+  }
