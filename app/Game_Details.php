@@ -10,72 +10,94 @@ $db = new GameDatabase();
 $gameManager = new GameManager($db);
 $userManager = new UserManager($db);
 
-// Als er op "Add to Wishlist" is geklikt
+// Als er op "Toevoegen aan Verlanglijst" is geklikt
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add-to-wishlist'])) {
     $gameID = $_POST['game_id'];
     $message = $userManager->addToWishlist($gameID);
 
-    // Voeg de game toe aan de sessie-wishlist
+    // Voeg de game toe aan de sessie-verlanglijst
     $_SESSION['wishlist'][$gameID] = true;
 }
 
-// Als er op "Remove from Wishlist" is geklikt
+// Als er op "Verwijderen uit Verlanglijst" is geklikt
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['remove-from-wishlist'])) {
     $gameID = $_POST['game_id'];
     $message = $userManager->removeFromWishlist($gameID); 
-    // Verwijder de game uit de sessie-wishlist
+    // Verwijder de game uit de sessie-verlanglijst
+    unset($_SESSION['wishlist'][$gameID]);
+}
+
+// Als er op "Game Verwijderen" is geklikt
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete-game'])) {
+    $gameID = $_POST['game_id'];
+    $message = $gameManager->deleteGame($gameID);
+
+    // Verwijder de game ook uit de sessie-verlanglijst als deze erin zit
     unset($_SESSION['wishlist'][$gameID]);
 }
 
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Details</title>
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="CSS/style.css">
 </head>
 <body>
 
 <?php
+// Haal de game op en toon de details
 if ($gameID !== null) {
     $games = $gameManager->fetch_game_id($gameID);
 
     if (!empty($games)) {
         $game = $games[0];
+        echo "<div id='game-details'>"; 
         echo "<img src='uploads/" . $game->getImageName() . "'><br>";
-        echo "Title: " . htmlspecialchars($game->getTitle()) . "<br>";
-        echo "Genre: " . htmlspecialchars($game->getGenre()) . "<br>";
-        echo "Platform: " . htmlspecialchars($game->getPlatform()) . "<br>";
-        echo "Release Year: " . htmlspecialchars($game->getReleaseYear()) . "<br>";
-        echo "Rating: " . htmlspecialchars($game->getRating()) . "<br>";
+        echo "<h2>" . htmlspecialchars($game->getTitle()) . "</h2>";
+        echo "<p>Genre: " . htmlspecialchars($game->getGenre()) . "</p>";
+        echo "<p>Platform: " . htmlspecialchars($game->getPlatform()) . "</p>";
+        echo "<p>Uitgavejaar: " . htmlspecialchars($game->getReleaseYear()) . "</p>";
+        echo "<p>Beoordeling: " . htmlspecialchars($game->getRating()) . "</p>";
+        echo "</div>";
     } else {
-        echo "Game not found.";
+        echo "<div id='game-details'><p>Game niet gevonden.</p></div>";
     }
 } else {
-    echo "Invalid game ID.";
+    echo "<div id='game-details'><p>Ongeldig game-ID.</p></div>";
 }
 
 echo "<div id='terug-balk2'>";
-echo "<a href='index.php'><div id='Back-Button'>BACK</div></a>";
+echo "<a href='index.php'><div id='Back-Button'>TERUG</div></a>";
 echo "</div>";
 
-// Controleer of de game in de wishlist zit
+// Controleer of de game in de verlanglijst zit
 if (isset($_SESSION['wishlist'][$gameID])) {
 ?>
-    <form method="POST">
+    <form id="remove-wishlist-form" method="POST">
         <input type="hidden" name="game_id" value="<?php echo $gameID; ?>">
-        <input type="submit" name="remove-from-wishlist" value="Remove from Wishlist">
+        <input type="submit" name="remove-from-wishlist" value="Verwijderen uit wishlist">
     </form>   
 <?php
 } else {
 ?>
-    <form method="POST">
+    <form id="add-wishlist-form" method="POST">
         <input type="hidden" name="game_id" value="<?php echo $gameID; ?>">
-        <input type="submit" name="add-to-wishlist" value="Add to Wishlist">
+        <input type="submit" name="add-to-wishlist" value="Toevoegen aan wishlist">
     </form>   
+<?php
+}
+
+// Voeg een verwijder-knop toe
+if ($gameID !== null) {
+?>
+    <form id="delete-game-form" method="POST">
+        <input type="hidden" name="game_id" value="<?php echo $gameID; ?>">
+        <input type="submit" name="delete-game" value="Game Verwijderen" onclick="return confirm('Weet je zeker dat je deze game wilt verwijderen?');">
+    </form>
 <?php
 }
 
@@ -84,7 +106,6 @@ if (!empty($message)) {
     echo "<div id='message'>$message</div>";
 }
 ?>
-
 
 </body>
 </html>

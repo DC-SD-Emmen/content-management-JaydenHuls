@@ -6,6 +6,7 @@ class Database {
     private $password = "root";
     private $conn;
 
+    // Constructor maakt verbinding via PDO
     public function __construct() {
         try {
             $this->conn = new PDO("mysql:host=$this->host;dbname=$this->dbname", $this->username, $this->password);
@@ -15,6 +16,7 @@ class Database {
         }
     }
 
+    // Return de databaseverbinding
     public function getConnection() {
         return $this->conn;
     }

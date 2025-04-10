@@ -1,0 +1,303 @@
+body {
+  color: #c7d5e0; /* Zachte grijstint voor tekst */
+  background-color: #1b2838; /* Donkere achtergrond */
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h2, h3 {
+  color: #c7d5e0; /* Zachte grijstint voor koppen */
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#menu-balk {
+  height: 60px;
+  background-color: #171a21;
+  display: flex;
+  position: relative;
+  align-items: center;
+  padding: 0 20px;
+}
+
+#message {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #66c0f4;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: bold;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+a:link, a:visited {
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  color: lightgray;
+  text-decoration: underline;
+}
+
+a:active {
+  color: grey;
+}
+
+#Back-Button {
+  background-color: #2a475e; /* Donkerblauw voor de terugknop */
+  color: #c7d5e0;
+  padding: 12px 20px;
+  border-radius: 5px;
+  margin: 0 auto;
+  cursor: pointer;
+  text-align: center;
+  width:100%;
+  max-width: 400px;
+  margin-top: 20px;
+  display: block;
+  font-weight: bold;
+  transition: background 0.3s ease, color 0.3s ease;
+  border: 1px solid #3c5268;
+}
+
+#Back-Button:hover {
+  background-color: #66c0f4; /* Blauw bij hover */
+  color: white;
+}
+
+form {
+  margin: 20px auto;
+  width: 80%;
+  max-width: 400px;
+
+  padding: 20px;
+  border-radius: 8px;
+}
+
+form input[type="text"],
+form input[type="password"],
+form input[type="submit"],
+form button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+form input[type="text"],
+form input[type="password"] {
+  background-color: #1b2838; /* Donkere invoervelden */
+  color: #c7d5e0; /* Zachte tekstkleur */
+  border: 1px solid #3c5268; /* Subtiele rand */
+}
+
+form input[type="text"]:focus,
+form input[type="password"]:focus {
+  outline: none;
+  border-color: #66c0f4; /* Blauw accent bij focus */
+  box-shadow: 0 0 5px #66c0f4;
+}
+#logout-form {
+  position: relative;
+  left: 29%;
+  width: 80%;
+  max-width: 400px;
+  padding: 5px;
+  border-radius: 8px;
+}
+#login-form input[type="text"],
+#login-form input[type="password"],
+#login-form input[type="submit"],
+#login-form button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+#login-form input[type="text"],
+#login-form input[type="password"] {
+  background-color: #1b2838; /* Donkere invoervelden */
+  color: #c7d5e0; /* Zachte tekstkleur */
+  border: 1px solid #3c5268; /* Subtiele rand */
+}
+
+#login-form input[type="text"]:focus,
+#login-form input[type="password"]:focus {
+  outline: none;
+  border-color: #66c0f4; /* Blauw accent bij focus */
+  box-shadow: 0 0 5px #66c0f4;
+}
+
+#signup-form input[type="text"],
+#signup-form input[type="password"],
+#signup-form input[type="submit"],
+#signup-form button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+#signup-form input[type="text"],
+#signup-form input[type="password"] {
+  background-color: #1b2838; /* Donkere invoervelden */
+  color: #c7d5e0; /* Zachte tekstkleur */
+  border: 1px solid #3c5268; /* Subtiele rand */
+}
+
+#signup-form input[type="text"]:focus,
+#signup-form input[type="password"]:focus {
+  outline: none;
+  border-color: #66c0f4; /* Blauw accent bij focus */
+  box-shadow: 0 0 5px #66c0f4;
+}
+
+#add-game-form input[type="text"],
+#add-game-form input[type="password"],
+#add-game-form input[type="submit"],
+#add-game-form button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+#add-game-form input[type="text"],
+#add-game-form input[type="password"] {
+  background-color: #1b2838; /* Donkere invoervelden */
+  color: #c7d5e0; /* Zachte tekstkleur */
+  border: 1px solid #3c5268; /* Subtiele rand */
+}
+
+#add-game-form input[type="text"]:focus,
+#add-game-form input[type="password"]:focus {
+  outline: none;
+  border-color: #66c0f4; /* Blauw accent bij focus */
+  box-shadow: 0 0 5px #66c0f4;
+}
+
+#update-form input[type="text"],
+#update-form input[type="password"],
+#update-form input[type="submit"],
+#update-form button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+#update-form input[type="text"],
+#update-form input[type="password"] {
+  background-color: #1b2838; /* Donkere invoervelden */
+  color: #c7d5e0; /* Zachte tekstkleur */
+  border: 1px solid #3c5268; /* Subtiele rand */
+}
+
+#update-form input[type="text"]:focus,
+#update-form input[type="password"]:focus {
+  outline: none;
+  border-color: #66c0f4; /* Blauw accent bij focus */
+  box-shadow: 0 0 5px #66c0f4;
+}
+
+#delete-form button {
+  background-color: #a93226; /* Donkerrood voor destructieve acties */
+}
+
+#delete-form button:hover {
+  background-color: #922b21; /* Donkerder rood bij hover */
+}
+
+#logout-button{
+  background-color: grey; /* Donkerblauw voor knoppen */
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+
+
+#wishlist {
+  position: relative;
+  width: 80%;
+  margin: 10px;
+  right: 5%;
+  background-color: #2a475e; /* Donkere achtergrond voor secties */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+#account {
+  position: relative;
+  width: 80%;
+  left: 10%;
+  margin: 10px;
+  background-color: #2a475e; /* Donkere achtergrond voor secties */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+#add-game {
+  position: relative;
+  width: 80%;
+  margin: 10px;
+  background-color: #2a475e; /* Donkere achtergrond voor secties */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+  right: 17%;
+}
+
+img {
+  width: 232px;
+  height: 218px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid #3c5268; /* Subtiele rand rond afbeeldingen */
+}
+
+#game-details {
+  text-align: center; /* Alle tekst centreren */
+  margin: auto;
+  width: 80%;
+  max-width: 600px;
+  background-color: #2a475e; /* Donkere achtergrond */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+#game-details img {
+  display: block;
+  margin: 0 auto; /* Afbeelding centreren */
+  width: 232px;
+  height: 218px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid #3c5268;
+}
+

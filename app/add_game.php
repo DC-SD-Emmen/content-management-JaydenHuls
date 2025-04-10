@@ -11,44 +11,39 @@
 </html>
 <?php
 
- spl_autoload_register(function ($className) {
+spl_autoload_register(function ($className) {
     require_once 'classes/' . $className . '.php';
-  });
+});
 
-  $db = new GameDatabase();
-  $GameManager = new GameManager($db);
+$db = new GameDatabase();
+$GameManager = new GameManager($db);
 
-  echo "<div id='terug-balk'>";
-  echo "<a href='index.php'><div id='Back-Button'>BACK</div></a>";
-  echo "</div>";
+echo "<div id='terug-balk'>";
+echo "<a href='index.php'><div id='Back-Button'>BACK</div></a>";
+echo "</div>";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $title = $_POST['title'];
+    $genre = $_POST['genre'];
+    $platform = $_POST['platform'];
+    $releaseYear = $_POST['release_year'];
+    $rating = (float)$_POST['rating'];
+    $file = $_FILES['image'];
 
+    // Controleer of er een bestand is geüpload
+    if (isset($file) && $file['error'] == 0) {
+        $gameManager = new GameManager($db);
 
-
-    if (isset($_POST["submit"])) {
-
-        $title = $_POST['title'] ?? '';
-        $genre = $_POST['genre'] ?? '';
-        $platform = $_POST['platform'] ?? '';
-        $release_year = $_POST['release_year'];
-        $rating = $_POST['rating'] ?? '';
-    
-        // Simpele validatie
-        if (empty($title) || empty($genre) || empty($platform) || empty($release_year) || empty($rating)) {
-            echo "All fields must be filled";
-            return;
+        // Upload het bestand
+        if ($gameManager->fileUpload($file)) {
+            // Voeg de game toe aan de database
+            $imageName = basename($file["name"]);
+            $gameManager->addNewGameToDB($title, $genre, $platform, $releaseYear, $rating, $imageName);
+        } else {
+            echo "File upload failed.";
         }
-    
-        if (!is_numeric($rating) || $rating < 0 && $rating > 10) {
-            echo "The rating must be between 0 - 10";
-            return;
-        }
-
-        $GameManager->fileUpload($_FILES['image']);
-
-        $GameManager->addNewGameToDB($title, $genre, $platform, $release_year, $rating, $_FILES['image']['name']);
-
+    } else {
+        echo "No file was uploaded or there was an error.";
     }
 }
 ?>
@@ -58,12 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
     <title>Voeg een game toe</title>
 </head>
 <body>
     <h1>Voeg een nieuw spel toe</h1>
 
-    <form action="" method="POST" enctype="multipart/form-data">
+    <form id="add-game-form" action="" method="POST" enctype="multipart/form-data">
         <label for="title">Naam van het spel:</label>
         <input type="text" id="title" name="title" required><br><br>
 

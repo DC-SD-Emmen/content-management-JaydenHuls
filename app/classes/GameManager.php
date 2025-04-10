@@ -1,74 +1,75 @@
 <?php
 
-
-  class GameManager {
+class GameManager {
 
     private $conn;
 
-      function __construct(GameDatabase $db) {
+    function __construct(GameDatabase $db) {
         $this->conn = $db->getConnection();
-      }
+    }
 
-      public function addNewGameToDB($title, $genre, $platform, $releaseYear, float $rating, $imageName) {
+    public function addNewGameToDB($title, $genre, $platform, $releaseYear, float $rating, $imageName) {
         try {
-            // Prepare the query with named placeholders
+            // Bereid de query voor met named placeholders
             $query = "INSERT INTO games (title, genre, platform, release_year, rating, imageName)
                       VALUES (:title, :genre, :platform, :releaseYear, :rating, :imageName)";
     
-            // Prepare the statement
+            // Bereid de statement voor
             $stmt = $this->conn->prepare($query);
     
-            // Bind the parameters to the statement
-            //Bind paramater gebruiken we om SQL injectie te voorkomen (veilig programeren)
+            // Bind de parameters aan de statement
             $stmt->bindParam(':title', $title, PDO::PARAM_STR);
             $stmt->bindParam(':genre', $genre, PDO::PARAM_STR);
             $stmt->bindParam(':platform', $platform, PDO::PARAM_STR);
             $stmt->bindParam(':releaseYear', $releaseYear, PDO::PARAM_STR);
-            $stmt->bindParam(':rating', $rating, PDO::PARAM_STR); // Using PDO::PARAM_STR for float as a string
+            $stmt->bindParam(':rating', $rating, PDO::PARAM_STR);
             $stmt->bindParam(':imageName', $imageName, PDO::PARAM_STR);
     
-            // Execute the statement
+            // Voer de statement uit
             if ($stmt->execute()) {
-                echo "Game added successfully.";
+                echo "Game succesvol toegevoegd.";
             } else {
-                echo "Something went wrong.";
+                echo "Er is iets misgegaan.";
             }
         } catch (PDOException $e) {
-            // Catch any errors and display the message
-            echo "Error: " . $e->getMessage();
+            // Vang eventuele fouten op en toon het bericht
+            echo "Fout: " . $e->getMessage();
         }
     }
-    
 
-      public function getGameFromDB() {
+    public function getGameFromDB() {
+        //we willen een array vullen met games
+        //hier maken we eerst een lege array
         $games = [];
         
         try {
-            // Prepare the query
+            // Bereid de query voor
             $query = "SELECT * FROM games";
             
-            // Execute the query using PDO
+            // Voer de query uit met PDO
+            //prepare is klaarzetten
             $stmt = $this->conn->prepare($query);
+            //execute is uitvoeren
             $stmt->execute();
             
-            // Fetch all the results
+            // Haal alle resultaten op
             if ($stmt->rowCount() > 0) {
-                //fetch assoc, alle informatie wordt gefetched. in de vorm van een associatieve array
+                //PDO fetch_assoc haalt de resultaten op als een associatieve array
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     $game = new Game($row);
-                    $games[] = $game;  // Use shorthand for array_push
+                    $games[] = $game;
                 }
             } else {
-                echo "0 results";
+                echo "Geen resultaten gevonden.";
             }
         } catch (PDOException $e) {
-            // Handle exception
-            echo "Error: " . $e->getMessage();
+            // Verwerk de uitzondering
+            echo "Fout: " . $e->getMessage();
         }
         
         return $games;
     }
-    
+
 
       /**
        * First thing first, you should make another function inside off the GameMananger.php file.
@@ -84,38 +85,35 @@
        * SELECT title, genre, platform, release_year, rating FROM gamelibrary WHERE id = '$id'
        * So you only get that specific row. Once you've done that, simply load it inside the GameDetails page or whatever and you should be fine.
        */
-      public function getGameTitleFromDB() {
-      
-          $query = "SELECT id, title FROM games";
+    public function getGameTitleFromDB() {
+        $query = "SELECT id, title FROM games";
+    }
 
-      }
-
-      public function fetch_game_id($gameID) {
-        $games = [];  // Initialize the array to store games
+    public function fetch_game_id($gameID) {
+        $games = [];
         
         try {
-            // Prepare the query with a named placeholder for the game ID
+            // Bereid de query voor met een named placeholder voor het game-ID
             $query = "SELECT * FROM games WHERE id = :id";
             $stmt = $this->conn->prepare($query);
     
-            // Bind the gameID to the placeholder using bindParam
+            // Bind het game-ID aan de placeholder
             $stmt->bindParam(':id', $gameID, PDO::PARAM_INT);
     
-            // Execute the statement
+            // Voer de statement uit
             $stmt->execute();
     
-            // Fetch results and create Game objects
+            // Haal resultaten op en maak Game-objecten
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $game = new Game($row);
                 $games[] = $game;
             }
             
         } catch (PDOException $e) {
-            // Handle any errors that occur during the execution
-            echo "Error: " . $e->getMessage();
+            // Verwerk eventuele fouten
+            echo "Fout: " . $e->getMessage();
         }
     
-        // Return the array of Game objects (not just a single game)
         return $games;
     }
 
@@ -123,53 +121,78 @@
         $target_dir = "uploads/";
         $target_file = $target_dir . basename($file["name"]);
         $uploadOk = 1;
-        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-        // Check if image file is a actual image or fake image
-       
+        // Controleer of het bestandspad niet leeg is
+        if (empty($file["tmp_name"])) {
+            echo "Geen bestand geüpload.";
+            return false;
+        }
+
+        // Controleer of het bestand een afbeelding is
         $check = getimagesize($file["tmp_name"]);
-        if($check !== false) {
-            // echo "File is an image - " . $check["mime"] . ".";
+        if ($check !== false) {
             $uploadOk = 1;
         } else {
-            echo "File is not an image.";
+            echo "Bestand is geen afbeelding.";
             $uploadOk = 0;
         }
 
-
-        // Check if file already exists
+        // Controleer of het bestand al bestaat
         if (file_exists($target_file)) {
-            echo "Sorry, file already exists.";
+            echo "Sorry, bestand bestaat al.";
             $uploadOk = 0;
         }
 
-        // Check file size
+        // Controleer de bestandsgrootte
         if ($file["size"] > 500000) {
-            echo "Sorry, your file is too large.";
+            echo "Sorry, je bestand is te groot.";
             $uploadOk = 0;
         }
 
-
-
-        // Allow certain file formats
-        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-        && $imageFileType != "gif" ) {
-            echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+        // Sta alleen bepaalde bestandstypen toe
+        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
+            echo "Sorry, alleen JPG, JPEG, PNG & GIF bestanden zijn toegestaan.";
             $uploadOk = 0;
         }
 
-        // Check if $uploadOk is set to 0 by an error
+        // Controleer of $uploadOk is ingesteld op 0 door een fout
         if ($uploadOk == 0) {
-            echo "Sorry, your file was not uploaded.";
-            // if everything is ok, try to upload file
+            echo "Sorry, je bestand is niet geüpload.";
+            return false;
         } else {
+            // Probeer het bestand te uploaden
             if (move_uploaded_file($file["tmp_name"], $target_file)) {
-                // echo "The file ". htmlspecialchars( basename( $file["name"])). " has been uploaded.";
+                echo "Het bestand " . htmlspecialchars(basename($file["name"])) . " is geüpload.";
+                return true;
             } else {
-                echo "Sorry, there was an error uploading your file.";
+                echo "Sorry, er is een fout opgetreden bij het uploaden van je bestand.";
+                return false;
             }
         }
     }
-    
-  }
-?> 
+
+    public function deleteGame($gameID) {
+        try {
+            // Verwijder eerst gerelateerde records uit de user_games-tabel
+            $query1 = "DELETE FROM user_games WHERE games_id = :id";
+            $stmt1 = $this->conn->prepare($query1);
+            $stmt1->bindParam(':id', $gameID, PDO::PARAM_INT);
+            $stmt1->execute();
+
+            // Verwijder daarna de game zelf
+            $query2 = "DELETE FROM games WHERE id = :id";
+            $stmt2 = $this->conn->prepare($query2);
+            $stmt2->bindParam(':id', $gameID, PDO::PARAM_INT);
+
+            if ($stmt2->execute()) {
+                return "Game succesvol verwijderd.";
+            } else {
+                return "Verwijderen van de game is mislukt.";
+            }
+        } catch (PDOException $e) {
+            return "Fout: " . $e->getMessage();
+        }
+    }
+}
+?>
